@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
     wings:
+        container_name: wings
         image: ghcr.io/pterodactyl/wings:v1.6.1
         restart: always
         networks:
@@ -13,8 +14,6 @@ services:
         tty: true
         environment:
             TZ: "UTC"
-            WINGS_UID: 988
-            WINGS_GID: 988
             WINGS_USERNAME: pterodactyl
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
@@ -24,16 +23,15 @@ services:
             - "/var/log/pterodactyl/:/var/log/pterodactyl/"
             - "/tmp/pterodactyl/:/tmp/pterodactyl/"
             - "/etc/ssl/certs:/etc/ssl/certs:ro"
-            # you may need /srv/daemon-data if you are upgrading from an old daemon
-            # - "/srv/daemon-data/:/srv/daemon-data/"
-            # Required for ssl if you use lets encrypt. uncomment to use
+            # Jika menggunakan Let's Encrypt untuk SSL, hapus komentar di bawah ini:
             # - "/etc/letsencrypt/:/etc/letsencrypt/"
+
 networks:
     wings0:
         name: wings0
         driver: bridge
         ipam:
             config:
-                - subnet: "172.21.0.0/6"
+                - subnet: "172.21.0.0/24"  # Menggunakan subnet lebih spesifik untuk menghindari konflik
         driver_opts:
-            com.docker.network.bride.name: wings0
+            com.docker.network.bridge.name: wings0
